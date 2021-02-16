@@ -193,3 +193,8 @@ alias cp='cp -i'
 alias mv='mv -i'
 # untar
 alias untar='tar xvf'
+
+
+# python3 as default
+alias python=$(which python3)
+alias pip=$(which pip3)
