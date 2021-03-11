@@ -21,3 +21,6 @@ The homebrew packages to be installed are in text files under `./lists/`
 To add `open-in-code` to finder, [check their repo](https://github.com/sozercan/OpenInCode). Note: [for Big Sur](https://apple.stackexchange.com/a/407166).
 
 After everything completes, I restart the system, but a logoff may be sufficient.
+
+## License
+http://creativecommons.org/licenses/MIT
