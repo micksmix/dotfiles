@@ -193,7 +193,8 @@ alias cp='cp -i'
 alias mv='mv -i'
 # untar
 alias untar='tar xvf'
-
+# curl via burp
+alias curlx='curl -x http://127.0.0.1:8080/ -k'
 
 # python3 as default
 alias python=$(which python3)
