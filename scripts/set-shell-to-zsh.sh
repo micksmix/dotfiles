@@ -4,21 +4,35 @@ source ./functions/common
 # Ask for the administrator password upfront
 sudo -v
 
-BREW_PREFIX=$(brew --prefix)
+UNAME=$(uname)
 print_line "Setting shell to zsh."
 
-# Set brew-installed zsh as default zsh
-if ! fgrep -q "${BREW_PREFIX}/bin/zsh" /etc/shells; then
-    echo "${BREW_PREFIX}/bin/zsh" | sudo tee -a /etc/shells;
-fi;
+if [ "$UNAME" == "Darwin" ] ; then
+    BREW_PREFIX=$(brew --prefix)
 
-# Set brew-installed bash as default bash
-if ! fgrep -q "${BREW_PREFIX}/bin/bash" /etc/shells; then
-    echo "${BREW_PREFIX}/bin/bash" | sudo tee -a /etc/shells;
-fi;
+    # Set brew-installed zsh as default zsh
+    if ! fgrep -q "${BREW_PREFIX}/bin/zsh" /etc/shells; then
+        echo "${BREW_PREFIX}/bin/zsh" | sudo tee -a /etc/shells;
+    fi;
 
-# set ZSH as default shell
-chsh -s "${BREW_PREFIX}/bin/zsh";
+    # Set brew-installed bash as default bash
+    if ! fgrep -q "${BREW_PREFIX}/bin/bash" /etc/shells; then
+        echo "${BREW_PREFIX}/bin/bash" | sudo tee -a /etc/shells;
+    fi;
+
+    # set ZSH as default shell
+    chsh -s "${BREW_PREFIX}/bin/zsh";
+elif [ "$UNAME" == "Linux" ] ; then
+    ZSH_PATH=$(which zsh)
+
+    # Set brew-installed zsh as default zsh
+    if ! fgrep -q "${ZSH_PATH}" /etc/shells; then
+        echo "${ZSH_PATH}" | sudo tee -a /etc/shells;
+    fi;
+
+    # set ZSH as default shell
+    chsh -s "${ZSH_PATH}";
+fi
 
 # install oh-my-zsh
 #sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
