@@ -4,7 +4,6 @@ export DOTFILES=~/dotfiles
 
 # source all the zsh files
 # startups.zsh
-# ZSH_THEME="powerlevel9k/powerlevel9k"
 ZSH_THEME="honukai"
 plugins=(
     zsh-autosuggestions
@@ -13,7 +12,6 @@ plugins=(
     zsh-completions
 )
 
-# export PATH="/usr/local/opt/node@12/bin:$PATH"
 alias tmux='TERM=xterm-256color tmux'
 if which tmux 2>&1 >/dev/null && [ "${USER}" != "root" ]; then
     # if no session is started, attach to the last exitted session or start a new session
