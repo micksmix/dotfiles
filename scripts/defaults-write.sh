@@ -13,6 +13,9 @@ sudo -v
 print_line " - Disable the sound effects on boot"
 sudo nvram SystemAudioVolume=" "
 
+print_line " - Disable sound effects within UI. Eg, trash empty, screenshot, etc"
+defaults write com.apple.systemsound "com.apple.sound.uiaudio.enabled" -int 0
+
 print_line " - Disable transparency in the menu bar and elsewhere on Yosemite"
 defaults write com.apple.universalaccess reduceTransparency -bool true
 
