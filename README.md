@@ -1,5 +1,8 @@
 # macOS dotfiles
 
+This will setup macOS the way I like it, with zsh + tmux, and brew install a number of programs and the configuration I want installed. Also does some basic setup presuming Go and Rust are installed.
+
+## Installation
 Run `./install.sh`
 
 Once complete, open iTerm2:
