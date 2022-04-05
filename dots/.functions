@@ -191,4 +191,8 @@ function makedmg {
 	fi
 }
 
+function macallow {
+	xattr -r -d com.apple.quarantine $@
+}
+
 if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
