@@ -195,4 +195,11 @@ function macallow {
 	xattr -r -d com.apple.quarantine $@
 }
 
+function gitb {
+	local gitbrowerpage=$(git remote show origin | grep Fetch.URL | sed 's/.*http/http/')
+	if [[ ! -z "$gitbrowerpage" ]]; then
+        o "${gitbrowerpage}"
+    fi
+}
+
 if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
