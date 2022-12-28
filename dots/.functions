@@ -195,6 +195,10 @@ function macallow {
 	xattr -r -d com.apple.quarantine $@
 }
 
+function macsign {
+	codesign --force --deep -s - $@
+}
+
 function gitb {
 	local gitbrowerpage=$(git remote show origin | grep Fetch.URL | sed 's/.*http/http/')
 	if [[ ! -z "$gitbrowerpage" ]]; then
