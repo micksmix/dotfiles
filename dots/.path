@@ -4,10 +4,10 @@
 export GOPATH="${HOME}/go"
 
 # update path
-export PATH=/usr/local/bin:${PATH}:/sbin
+export PATH=/opt/homebrew/bin:${PATH}:/sbin
 
 # add go path
-export PATH="/usr/local/go/bin:${GOPATH}/bin:${PATH}"
+export PATH="/opt/homebrew/go/bin:${GOPATH}/bin:${PATH}"
 
 # add rust path
 export PATH="${HOME}/.cargo/bin:${PATH}"
@@ -19,11 +19,9 @@ export PATH="${HOME}/.cargo/bin:${PATH}"
 export CDPATH=${CDPATH}:${GOPATH}/src/github.com:${GOPATH}/src/golang.org:${GOPATH}/src
 
 # update path for gnu coreutils, make & find on darwin
-export PATH=/usr/local/opt/coreutils/libexec/gnubin:${PATH}
-export MANPATH=/usr/local/opt/coreutils/libexec/gnuman:${MANPATH}
-export PATH=/usr/local/opt/make/libexec/gnubin:${PATH}
-export MANPATH=/usr/local/opt/make/libexec/gnuman:${MANPATH}
-export PATH=/usr/local/opt/findutils/libexec/gnubin:${PATH}
-export MANPATH=/usr/local/opt/findutils/libexec/gnuman:${MANPATH}
-
-
+export PATH=/opt/homebrew/opt/coreutils/libexec/gnubin:${PATH}
+export MANPATH=/opt/homebrew/opt/coreutils/libexec/gnuman:${MANPATH}
+export PATH=/opt/homebrew/opt/make/libexec/gnubin:${PATH}
+export MANPATH=/opt/homebrew/opt/make/libexec/gnuman:${MANPATH}
+export PATH=/opt/homebrew/opt/findutils/libexec/gnubin:${PATH}
+export MANPATH=/opt/homebrew/opt/findutils/libexec/gnuman:${MANPATH}
