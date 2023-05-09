@@ -1,6 +1,6 @@
 # macOS dotfiles
 
-This will setup macOS the way I like it, with zsh + tmux, and brew install a number of programs and the configuration I want installed. Also does some basic setup presuming Go and Rust are installed.
+This will setup macOS the way I like it, with zsh and brew install a number of programs and the configuration I want installed.
 
 ## Installation
 Run `./install.sh`
