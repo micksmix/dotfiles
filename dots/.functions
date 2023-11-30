@@ -200,9 +200,24 @@ function macsign {
 }
 
 function gitb {
-	local gitbrowerpage=$(git remote show origin | grep Fetch.URL | sed 's/.*http/http/')
-	if [[ ! -z "$gitbrowerpage" ]]; then
-        o "${gitbrowerpage}"
+    local remote_url=$(git remote get-url origin)
+
+    echo $remote_url
+    if [[ "$remote_url" == git@* ]]; then
+        # Convert SSH URL to HTTP URL
+        remote_url=${remote_url/git@/https://}
+        remote_url=${remote_url/github.com:/github.com\/}
+        remote_url=${remote_url%.git}
+    elif [[ "$remote_url" == http* ]]; then
+        # Directly use HTTP URL
+        remote_url=${remote_url%.git}
+    else
+        echo "Unsupported URL format."
+        return 1
+    fi
+
+    if [[ ! -z "$remote_url" ]]; then
+        open "$remote_url" # Use 'xdg-open' on Linux or 'start' on Windows
     fi
 }
 
@@ -216,8 +231,10 @@ function frg {
   file=${result%%:*}
   linenumber=$(echo "${result}" | cut -d: -f2)
   if [[ -n "$file" ]]; then
-          $EDITOR +"${linenumber}" "$file"
+        # $EDITOR +"${linenumber}" "$file"
+	code -g "${file}:${linenumber}"
   fi
 }
+
 
 if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
