@@ -195,3 +195,10 @@ defaults write com.apple.frameworks.diskimages skip-verify-remote -bool true
 
 print_line " - Don’t show recent applications in Dock"
 defaults write com.apple.dock show-recents -bool false
+
+print_line " - Reduce spacing between icons in the menu bar"
+defaults -currentHost write -globalDomain NSStatusItemSelectionPadding -int 6
+defaults -currentHost write -globalDomain NSStatusItemSpacing -int 6
+
+print_line " - No more .DS_STORE files"
+defaults write com.apple.desktopservices DSDontWriteNetworkStores true
