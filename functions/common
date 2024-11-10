@@ -1,9 +1,15 @@
-#!/bin/sh
+#!/bin/bash
 
-CURDIR=$(pwd)
+# Get the directory where this script (functions/common) is located
+FUNCTIONS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+# Get the root directory of the project (one level up from functions/)
+ROOT_DIR="$( cd "${FUNCTIONS_DIR}/.." && pwd )"
 
 print_line() {
     _cur_time=$(date '+%Y/%m/%d %H:%M:%S')
     printf '[%s] ' "$_cur_time"
     echo "$@"
 }
+
+# Export variables so they're available to sourced scripts
+export ROOT_DIR
