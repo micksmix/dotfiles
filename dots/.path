@@ -1,103 +1,58 @@
 #!/bin/bash
 
 # Determine Mac architecture and set Homebrew paths accordingly
-if [[ "$(uname -m)" == "arm64" ]]; then
-    HOMEBREW_PREFIX="/opt/homebrew"
-else
-    HOMEBREW_PREFIX="/usr/local"
-fi
+HOMEBREW_PREFIX=$([[ "$(uname -m)" == "arm64" ]] && echo "/opt/homebrew" || echo "/usr/local")
 
-# Function to safely add to PATH
-add_to_path() {
+# Function to safely add directories to environment variables
+add_to_env_path() {
     local new_path="$1"
+    local env_var="${2:-PATH}" # Default to PATH if no env_var is provided
+    eval "current_path=\$$env_var"
+
     if [ -d "$new_path" ]; then
-        case ":${PATH}:" in
-            *":${new_path}:"*) ;; # Already in PATH
-            *) export PATH="${new_path}:${PATH}" ;;
+        case ":${current_path}:" in
+            *":${new_path}:"*) ;; # Already in PATH/MANPATH
+            *) eval "export $env_var=\"${new_path}:${current_path}\"" ;;
         esac
     fi
 }
 
-# Function to safely add to MANPATH
-add_to_manpath() {
-    local new_path="$1"
-    if [ -d "$new_path" ]; then
-        case ":${MANPATH}:" in
-            *":${new_path}:"*) ;; # Already in MANPATH
-            *) export MANPATH="${new_path}:${MANPATH}" ;;
-        esac
-    fi
-}
-
-# Set up Go environment
+# Set up environment paths
 export GOPATH="${HOME}/go"
 mkdir -p "$GOPATH"
 
-# Add Homebrew to PATH
-add_to_path "${HOMEBREW_PREFIX}/bin"
-add_to_path "/sbin"
-
-# Add Go paths
-add_to_path "${HOMEBREW_PREFIX}/go/bin"
-add_to_path "${GOPATH}/bin"
-
-# Add Rust path if it exists
-add_to_path "${HOME}/.cargo/bin"
+add_to_env_path "${HOMEBREW_PREFIX}/bin"
+add_to_env_path "/sbin"
+add_to_env_path "${HOMEBREW_PREFIX}/go/bin"
+add_to_env_path "${GOPATH}/bin"
+add_to_env_path "${HOME}/.cargo/bin" # Rust
 
 # Add GNU coreutils paths if they exist
 for tool in coreutils make findutils; do
-    if [ -d "${HOMEBREW_PREFIX}/opt/${tool}/libexec/gnubin" ]; then
-        add_to_path "${HOMEBREW_PREFIX}/opt/${tool}/libexec/gnubin"
-        add_to_manpath "${HOMEBREW_PREFIX}/opt/${tool}/libexec/gnuman"
-    fi
+    gnubin_path="${HOMEBREW_PREFIX}/opt/${tool}/libexec/gnubin"
+    gnuman_path="${HOMEBREW_PREFIX}/opt/${tool}/libexec/gnuman"
+    add_to_env_path "$gnubin_path"
+    add_to_env_path "$gnuman_path" "MANPATH"
 done
 
-# Optional: Add some useful environment variables
+# Add Homebrew's sbin path if it exists
+add_to_env_path "${HOMEBREW_PREFIX}/sbin"
+
+# Ensure unique entries in PATH and MANPATH
+clean_env_path() {
+    local env_var="$1"
+    eval "old_paths=\$$env_var"
+    eval "$env_var=\"$(echo "$old_paths" | awk -v RS=: '!a[$0]++ { if (NR > 1) printf(":"); printf $0 }')\""
+}
+
+clean_env_path PATH
+clean_env_path MANPATH
+
+# Optional: Add useful environment variables
 export EDITOR="vim"
 export VISUAL="vim"
 export LANG="en_US.UTF-8"
 export LC_ALL="en_US.UTF-8"
 
-# Add Homebrew's sbin if it exists
-add_to_path "${HOMEBREW_PREFIX}/sbin"
-
-# Ensure paths are unique by removing duplicates
-if [ -n "$PATH" ]; then
-    old_PATH=$PATH:
-    PATH=
-    while [ -n "$old_PATH" ]; do
-        x=${old_PATH%%:*}
-        case $PATH: in
-            *:"$x":*) ;;
-            *) if [ "$PATH" = "" ]; then
-                   PATH=$x
-               else
-                   PATH=$PATH:$x
-               fi
-               ;;
-        esac
-        old_PATH=${old_PATH#*:}
-    done
-fi
-
-if [ -n "$MANPATH" ]; then
-    old_MANPATH=$MANPATH:
-    MANPATH=
-    while [ -n "$old_MANPATH" ]; do
-        x=${old_MANPATH%%:*}
-        case $MANPATH: in
-            *:"$x":*) ;;
-            *) if [ "$MANPATH" = "" ]; then
-                   MANPATH=$x
-               else
-                   MANPATH=$MANPATH:$x
-               fi
-               ;;
-        esac
-        old_MANPATH=${old_MANPATH#*:}
-    done
-fi
-
-# Export the cleaned paths
-export PATH
-export MANPATH
+# Export final cleaned paths
+export PATH MANPATH
