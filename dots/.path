@@ -26,6 +26,7 @@ add_to_env_path "/sbin"
 add_to_env_path "${HOMEBREW_PREFIX}/go/bin"
 add_to_env_path "${GOPATH}/bin"
 add_to_env_path "${HOME}/.cargo/bin" # Rust
+add_to_env_path "${HOME}/.local/bin"
 
 # Add GNU coreutils paths if they exist
 for tool in coreutils make findutils; do

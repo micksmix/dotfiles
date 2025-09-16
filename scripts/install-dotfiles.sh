@@ -31,16 +31,20 @@ find "${ROOT_DIR}/dots" -name ".*" \
 done
 
 # Create .iterm2 directory if it doesn't exist
-print_line "Setting up iTerm2 configuration..."
-mkdir -p "$HOME/.iterm2"
+if is_macos; then
+    print_line "Setting up iTerm2 configuration..."
+    mkdir -p "$HOME/.iterm2"
 
-# Copy iTerm2 preferences
-ITERM2_PLIST="${ROOT_DIR}/scripts/com.googlecode.iterm2.plist"
-if [ -f "$ITERM2_PLIST" ]; then
-    print_line "Copying iTerm2 preferences"
-    \cp "$ITERM2_PLIST" "$HOME/.iterm2/"
+    # Copy iTerm2 preferences
+    ITERM2_PLIST="${ROOT_DIR}/scripts/com.googlecode.iterm2.plist"
+    if [ -f "$ITERM2_PLIST" ]; then
+        print_line "Copying iTerm2 preferences"
+        \cp "$ITERM2_PLIST" "$HOME/.iterm2/"
+    else
+        print_line "Warning: iTerm2 preferences file not found at $ITERM2_PLIST"
+    fi
 else
-    print_line "Warning: iTerm2 preferences file not found at $ITERM2_PLIST"
+    print_line "Skipping iTerm2 configuration on non-macOS platforms."
 fi
 
 print_line "Dotfiles installation complete!"

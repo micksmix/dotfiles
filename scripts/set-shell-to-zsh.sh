@@ -30,7 +30,12 @@ if [ "$UNAME" == "Darwin" ] ; then
     \cp "${ROOT_DIR}/scripts/com.googlecode.iterm2.plist" "$HOME/.iterm2/"
 
 elif [ "$UNAME" == "Linux" ] ; then
-    ZSH_PATH=$(which zsh)
+    ZSH_PATH=$(command -v zsh || true)
+
+    if [ -z "$ZSH_PATH" ]; then
+        print_line "zsh is not installed. Please install it before running this script."
+        exit 1
+    fi
 
     # Set zsh as default shell
     if ! fgrep -q "${ZSH_PATH}" /etc/shells; then

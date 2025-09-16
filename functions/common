@@ -13,3 +13,58 @@ print_line() {
 
 # Export variables so they're available to sourced scripts
 export ROOT_DIR
+
+UNAME_S=$(uname -s)
+PLATFORM="unknown"
+LINUX_DISTRO=""
+LINUX_DISTRO_LIKE=""
+
+case "$UNAME_S" in
+    Darwin)
+        PLATFORM="macos"
+        ;;
+    Linux)
+        PLATFORM="linux"
+        if [ -r /etc/os-release ]; then
+            # shellcheck disable=SC1091
+            . /etc/os-release
+            LINUX_DISTRO="${ID:-}"
+            LINUX_DISTRO_LIKE="${ID_LIKE:-}"
+        fi
+        ;;
+    *)
+        PLATFORM="unknown"
+        ;;
+esac
+
+is_macos() {
+    [ "$PLATFORM" = "macos" ]
+}
+
+is_linux() {
+    [ "$PLATFORM" = "linux" ]
+}
+
+is_debian_like() {
+    if ! is_linux; then
+        return 1
+    fi
+
+    case "$LINUX_DISTRO" in
+        debian|ubuntu|linuxmint|pop|pop_os|pop-os|elementary|neon|zorin)
+            return 0
+            ;;
+    esac
+
+    if [ -n "$LINUX_DISTRO_LIKE" ]; then
+        case " $LINUX_DISTRO_LIKE " in
+            *" debian "*|*" ubuntu "*)
+                return 0
+                ;;
+        esac
+    fi
+
+    return 1
+}
+
+export FUNCTIONS_DIR PLATFORM LINUX_DISTRO LINUX_DISTRO_LIKE
