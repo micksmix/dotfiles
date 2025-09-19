@@ -3,17 +3,34 @@
 # Configuration
 GIT_ICON="\uE725"           # Git icon
 GIT_COLOR="\e[38;5;12m"     # Color for Git icon and details
-PROMPT_COLORS=(
-  bold=$(tput bold)
-  reset=$(tput sgr0)
-  user_color=$(tput setaf 166)  # Orange
-  host_color=$(tput setaf 136)  # Yellow
-  path_color=$(tput setaf 64)   # Green
-  git_branch_color=$(tput setaf 61) # Violet
-  git_status_color=$(tput setaf 33) # Blue
-  default_color=$(tput setaf 15)    # White
-)
+# Universal associative array for prompt colors: works for both bash and zsh
 
+if [ -n "$ZSH_VERSION" ]; then
+  # Zsh associative array syntax
+  typeset -A PROMPT_COLORS
+  PROMPT_COLORS[bold]=$(tput bold)
+  PROMPT_COLORS[reset]=$(tput sgr0)
+  PROMPT_COLORS[user_color]=$(tput setaf 166)
+  PROMPT_COLORS[host_color]=$(tput setaf 136)
+  PROMPT_COLORS[path_color]=$(tput setaf 64)
+  PROMPT_COLORS[git_branch_color]=$(tput setaf 61)
+  PROMPT_COLORS[git_status_color]=$(tput setaf 33)
+  PROMPT_COLORS[default_color]=$(tput setaf 15)
+elif [ -n "$BASH_VERSION" ]; then
+  # Bash associative array syntax
+  declare -A PROMPT_COLORS
+  PROMPT_COLORS[bold]=$(tput bold)
+  PROMPT_COLORS[reset]=$(tput sgr0)
+  PROMPT_COLORS[user_color]=$(tput setaf 166)
+  PROMPT_COLORS[host_color]=$(tput setaf 136)
+  PROMPT_COLORS[path_color]=$(tput setaf 64)
+  PROMPT_COLORS[git_branch_color]=$(tput setaf 61)
+  PROMPT_COLORS[git_status_color]=$(tput setaf 33)
+  PROMPT_COLORS[default_color]=$(tput setaf 15)
+fi
+
+# Usage example (works in both bash and zsh):
+# echo "${PROMPT_COLORS[bold]}This will be bold${PROMPT_COLORS[reset]}"
 # Git prompt function
 prompt_git() {
   local status branch_name symbols=""
@@ -43,6 +60,10 @@ PS1+="\[${PROMPT_COLORS[default_color]}\] in "
 PS1+="\[${PROMPT_COLORS[path_color]}\]\w"   # Working directory
 PS1+="\$(prompt_git \"\[${PROMPT_COLORS[default_color]}\] on \[${PROMPT_COLORS[git_branch_color]}\]\" \"\[${PROMPT_COLORS[git_status_color]}\]\")" # Git details
 PS1+="\n\[${PROMPT_COLORS[default_color]}\]\$ \[${PROMPT_COLORS[reset]}\]"
+
+if [[ -n "$SSH_CLIENT" || -n "$SSH_TTY" ]]; then
+    PS1="[SSH] $PS1"
+fi
 
 # Secondary prompt
 PS2="\[${PROMPT_COLORS[host_color]}\]→ \[${PROMPT_COLORS[reset]}\]"
